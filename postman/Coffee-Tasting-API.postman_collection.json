@@ -1,0 +1,801 @@
+{
+	"info": {
+		"_postman_id": "coffee-tasting-api-collection",
+		"name": "Coffee Tasting API",
+		"description": "Complete API collection for Coffee Tasting Application with COE cupping evaluation",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "🔥 Health Check",
+			"item": [
+				{
+					"name": "Health Check",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Service is UP\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql(\"UP\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/{{publicPrefix}}/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{publicPrefix}}",
+								"health"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🔐 Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"userId\", jsonData.id);",
+									"    pm.environment.set(\"username\", jsonData.username);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"{{username}}\",\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\",\n    \"displayName\": \"Test User\",\n    \"bio\": \"Coffee enthusiast and tester\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/{{authPrefix}}/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{authPrefix}}",
+								"register"
+							]
+						}
+					}
+				},
+				{
+					"name": "Login User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"authToken\", jsonData.token);",
+									"    pm.environment.set(\"userId\", jsonData.user.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"{{username}}\",\n    \"password\": \"{{password}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/{{authPrefix}}/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{authPrefix}}",
+								"login"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "👤 Users",
+			"item": [
+				{
+					"name": "Get User Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}{{apiPrefix}}/users/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefix}}",
+								"users",
+								"{{userId}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Update User Profile",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"displayName\": \"Updated Test User\",\n    \"bio\": \"Updated bio - Coffee expert and enthusiast\",\n    \"isPublic\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}{{apiPrefix}}/users/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefix}}",
+								"users",
+								"{{userId}}"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "☕ Coffee Beans",
+			"item": [
+				{
+					"name": "Create Coffee Bean",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"coffeeBeanId\", jsonData.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Ethiopia Yirgacheffe\",\n    \"originCountry\": \"Ethiopia\",\n    \"originRegion\": \"Yirgacheffe\",\n    \"originFarm\": \"Kochere Washing Station\",\n    \"variety\": \"Heirloom\",\n    \"altitude\": 1950,\n    \"processingMethod\": \"Washed\",\n    \"roastLevel\": \"LIGHT\",\n    \"roasterName\": \"Blue Bottle Coffee\",\n    \"roastDate\": \"2025-06-05\",\n    \"harvestYear\": 2024,\n    \"description\": \"Bright and floral with notes of bergamot and lemon\",\n    \"notes\": \"Perfect for pour-over brewing methods\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}{{apiPrefix}}/coffee-beans",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefix}}",
+								"coffee-beans"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get All Coffee Beans",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}{{apiPrefix}}/coffee-beans",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefix}}",
+								"coffee-beans"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Coffee Bean by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}{{apiPrefix}}/coffee-beans/{{coffeeBeanId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefix}}",
+								"coffee-beans",
+								"{{coffeeBeanId}}"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🥤 Cupping Sessions",
+			"item": [
+				{
+					"name": "Create Cupping Session",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"sessionId\", jsonData.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Ethiopia Yirgacheffe Cupping Session\",\n    \"coffeeBeanId\": {{coffeeBeanId}},\n    \"brewingMethod\": \"Cupping\",\n    \"grindSize\": \"Medium-Fine\",\n    \"coffeeToWaterRatio\": \"1:15\",\n    \"waterTemperature\": 93,\n    \"brewingTime\": \"4:00\",\n    \"notes\": \"First cupping session with this bean\",\n    \"isPublic\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}{{apiPrefix}}/cupping-sessions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefix}}",
+								"cupping-sessions"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Public Cupping Sessions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}{{publicPrefix}}/cupping-sessions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{publicPrefix}}",
+								"cupping-sessions"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get My Cupping Sessions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}{{apiPrefix}}/cupping-sessions/my",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefix}}",
+								"cupping-sessions",
+								"my"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Cupping Session by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}{{apiPrefix}}/cupping-sessions/{{sessionId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefix}}",
+								"cupping-sessions",
+								"{{sessionId}}"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "📊 COE Cupping Scores",
+			"item": [
+				{
+					"name": "Create COE Cupping Score",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"sessionId\": {{sessionId}},\n    \"fragranceAroma\": 8.5,\n    \"flavor\": 8.75,\n    \"aftertaste\": 8.25,\n    \"acidity\": 8.5,\n    \"body\": 8.0,\n    \"balance\": 8.25,\n    \"sweetness\": 8.5,\n    \"cupCleanliness\": 8.75,\n    \"overall\": 8.5,\n    \"defects\": 0,\n    \"notes\": \"Excellent bright acidity with floral notes. Clean cup with good balance.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}{{apiPrefix}}/cupping-scores",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefix}}",
+								"cupping-scores"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Cupping Score by Session ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}{{apiPrefix}}/cupping-scores/session/{{sessionId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefix}}",
+								"cupping-scores",
+								"session",
+								"{{sessionId}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Cupping Score",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fragranceAroma\": 8.75,\n    \"flavor\": 9.0,\n    \"aftertaste\": 8.5,\n    \"acidity\": 8.75,\n    \"body\": 8.25,\n    \"balance\": 8.5,\n    \"sweetness\": 8.75,\n    \"cupCleanliness\": 9.0,\n    \"overall\": 8.75,\n    \"defects\": 0,\n    \"notes\": \"Updated score after second tasting. Improved flavor notes with longer steeping.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}{{apiPrefix}}/cupping-scores/session/{{sessionId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefix}}",
+								"cupping-scores",
+								"session",
+								"{{sessionId}}"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "📸 Session Images",
+			"item": [
+				{
+					"name": "Upload Session Image",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "imageType",
+									"value": "BEANS",
+									"type": "text"
+								},
+								{
+									"key": "caption",
+									"value": "Ethiopia Yirgacheffe beans before grinding",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}{{apiPrefix}}/cupping-sessions/{{sessionId}}/images",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefix}}",
+								"cupping-sessions",
+								"{{sessionId}}",
+								"images"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Session Images",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}{{apiPrefix}}/cupping-sessions/{{sessionId}}/images",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefix}}",
+								"cupping-sessions",
+								"{{sessionId}}",
+								"images"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "❤️ Likes & Comments",
+			"item": [
+				{
+					"name": "Like Session",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}{{apiPrefix}}/cupping-sessions/{{sessionId}}/like",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefix}}",
+								"cupping-sessions",
+								"{{sessionId}}",
+								"like"
+							]
+						}
+					}
+				},
+				{
+					"name": "Unlike Session",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}{{apiPrefix}}/cupping-sessions/{{sessionId}}/like",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefix}}",
+								"cupping-sessions",
+								"{{sessionId}}",
+								"like"
+							]
+						}
+					}
+				},
+				{
+					"name": "Add Comment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"Great cupping session! I love the floral notes you mentioned. What was your brewing ratio?\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}{{apiPrefix}}/cupping-sessions/{{sessionId}}/comments",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefix}}",
+								"cupping-sessions",
+								"{{sessionId}}",
+								"comments"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Session Comments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}{{publicPrefix}}/cupping-sessions/{{sessionId}}/comments",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{publicPrefix}}",
+								"cupping-sessions",
+								"{{sessionId}}",
+								"comments"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "👥 Social Features",
+			"item": [
+				{
+					"name": "Follow User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}{{apiPrefix}}/users/{{userId}}/follow",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefix}}",
+								"users",
+								"{{userId}}",
+								"follow"
+							]
+						}
+					}
+				},
+				{
+					"name": "Unfollow User",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}{{apiPrefix}}/users/{{userId}}/follow",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefix}}",
+								"users",
+								"{{userId}}",
+								"follow"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get User Followers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}{{apiPrefix}}/users/{{userId}}/followers",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefix}}",
+								"users",
+								"{{userId}}",
+								"followers"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get User Following",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}{{apiPrefix}}/users/{{userId}}/following",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"{{apiPrefix}}",
+								"users",
+								"{{userId}}",
+								"following"
+							]
+						}
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{authToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+} 

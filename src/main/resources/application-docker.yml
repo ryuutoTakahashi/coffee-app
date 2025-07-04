@@ -1,0 +1,19 @@
+spring:
+  config:
+    activate:
+      on-profile: docker
+      
+  datasource:
+    url: jdbc:postgresql://postgres:5432/coffee_tasting
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+logging:
+  level:
+    com.coffeetasting: INFO
+    org.springframework.security: DEBUG 

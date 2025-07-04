@@ -1,0 +1,17 @@
+com\coffeetasting\entity\CoffeeBean$RoastLevel.class
+com\coffeetasting\entity\User.class
+com\coffeetasting\CoffeeTastingApiApplication.class
+com\coffeetasting\entity\CoffeeBean.class
+com\coffeetasting\config\WebSecurityConfiguration.class
+com\coffeetasting\entity\CuppingSession.class
+com\coffeetasting\entity\User$Role.class
+com\coffeetasting\entity\CuppingScore.class
+com\coffeetasting\entity\Comment.class
+com\coffeetasting\entity\BaseEntity.class
+com\coffeetasting\entity\Follow.class
+com\coffeetasting\entity\SessionImage.class
+com\coffeetasting\config\JpaConfig.class
+com\coffeetasting\controller\HealthController.class
+com\coffeetasting\config\SecurityConfig.class
+com\coffeetasting\entity\SessionImage$ImageType.class
+com\coffeetasting\entity\Like.class
